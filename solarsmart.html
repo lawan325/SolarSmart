@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>SolarSmart</title>
+
+<style>
+body{
+    font-family: Arial;
+    background:#F5F5F5;
+    text-align:center;
+}
+
+.container{
+    background:white;
+    width:350px;
+    margin:auto;
+    padding:20px;
+    border-radius:10px;
+    box-shadow:0px 0px 10px gray;
+}
+
+h2{
+    color:#0B3D91;
+}
+
+input{
+    width:90%;
+    padding:8px;
+    margin:5px;
+}
+
+button{
+    background:#FFD700;
+    padding:10px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+.result{
+    margin-top:15px;
+    font-weight:bold;
+}
+
+.safe{
+    color:green;
+}
+
+.warning{
+    color:red;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h2>SolarSmart ☀️</h2>
+
+<div class="container">
+
+<label>Battery Voltage (V)</label><br>
+<input type="number" id="voltage" placeholder="e.g 12"><br>
+
+<label>Battery Capacity (Ah)</label><br>
+<input type="number" id="capacity" placeholder="e.g 200"><br>
+
+<h3>Select Appliances</h3>
+
+<input type="checkbox" value="120"> TV (120W)<br>
+<input type="checkbox" value="70"> Fan (70W)<br>
+<input type="checkbox" value="60"> Laptop (60W)<br>
+<input type="checkbox" value="10"> LED Bulb (10W)<br>
+<input type="checkbox" value="200"> Fridge (200W)<br><br>
+
+<button onclick="calculate()">Calculate</button>
+
+<div class="result" id="output"></div>
+
+</div>
+
+<script>
+
+function calculate(){
+
+let voltage = document.getElementById("voltage").value;
+let capacity = document.getElementById("capacity").value;
+
+if(voltage=="" || capacity==""){
+    alert("Enter battery details");
+    return;
+}
+
+// Calculate total load from selected appliances
+let checkboxes = document.querySelectorAll("input[type=checkbox]:checked");
+let load = 0;
+
+checkboxes.forEach((box)=>{
+    load += parseInt(box.value);
+});
+
+if(load == 0){
+    alert("Select at least one appliance");
+    return;
+}
+
+let energy = voltage * capacity;
+let runtime = energy / load;
+
+// Safe load (simple assumption)
+let safeLoad = energy * 0.8;
+
+let status = "";
+
+if(load <= safeLoad){
+    status = "<span class='safe'>✅ Safe Load</span>";
+}else{
+    status = "<span class='warning'>⚠ Overload Risk</span>";
+}
+
+document.getElementById("output").innerHTML =
+"Total Load: " + load + " W <br>" +
+"Battery Energy: " + energy + " Wh <br>" +
+"Estimated Runtime: " + runtime.toFixed(2) + " Hours <br>" +
+status;
+
+}
+
+</script>
+
+</body>
+</html>
